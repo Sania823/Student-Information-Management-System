@@ -1,9 +1,9 @@
 # include <stdio.h>
-struct Student{
-
+struct Student
+{
+    
 };
-
 int main(void)
 {
-
+   
 }
