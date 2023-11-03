@@ -1,14 +1,14 @@
 # include <stdio.h>
 #include <string.h>
 #include<stdlib.h>
-struct Student
+typedef struct 
 {
      char firstName[50];
      char lastName[50];
      int rollNumber;
      float cgpa;
     char courses[100];
-};
+}Student;
 int main()
 {
      int choice;
