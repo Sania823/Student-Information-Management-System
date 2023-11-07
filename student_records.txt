@@ -1,1 +1,9 @@
-4  aasta rajmane eln 6.00 
+
+PRN:1
+	Name:Sania Deshmukh
+	Branch:Electronics
+	CGPA:8.00
+PRN:2
+	Name:Nilesh Desai
+	Branch:Electronics
+	CGPA:8.00
