@@ -1,103 +1,148 @@
-# include <stdio.h>
-#include <string.h>
 #include<stdlib.h>
-typedef struct Student
+#include<string.h>
+#include<stdio.h>
+struct Student
 {
-    char firstName[50];
-    char lastName[50];
-    int rollNumber;
+    int rollnumber;
+    char first_name[100];
+    char last_name[100];
+    char branch[100];
     float cgpa;
-    char branch[50];
     struct Student *next;
-}Student;
-Student *head = NULL;
-//Function to add student data to the file
-void addStudent()
+};
+void display(struct Student *head)
 {
-    Student *new_student = (Student*)malloc(sizeof(Student));
-    FILE *file = fopen("student_records.txt", "a");
-    if (file == NULL)
-    {
-        printf("Error in opening the file\n");
-        return;
+    FILE *file;
+    file = fopen("student_records.txt", "r");
+    struct Student * temp = head;
+    while(temp!=NULL){
+        
+        printf("Roll Number: %d\n", temp->rollnumber);
+        printf("First Name: %s\n", temp->first_name);
+        printf("last Name: %s\n", temp->last_name);
+        printf("branch: %s\n", temp->branch);
+        printf("CGPA: %0.4f\n\n", temp->cgpa);
+        temp = temp->next;
     }
-    printf("Add the Students Details\n");
-    printf("-------------------------\n");
-    printf("Enter the first name of student:\n");
-    scanf("%s",new_student -> firstName);
-    printf("Enter the last name of student:\n");
-    scanf("%s",new_student -> lastName);
-    printf("Enter the Roll number of student:\n");
-    scanf("%d",&new_student -> rollNumber);
-    printf("Enter the CGPA of student:\n");
-    scanf("%f",&new_student -> cgpa);
-    printf("Enter branch:\n");
-    scanf("%s",new_student -> branch);
-
-    if(head == NULL || new_student -> rollNumber < head -> rollNumber)
+    printf("\n");
+    fclose(file);
+}
+struct Student * insert(struct Student *head, int rollnumber, char first_name[100],char last_name[100],char branch[100], float cgpa)
+{
+    
+    struct Student * student = (struct Student *) malloc(sizeof(struct Student));
+    FILE *file = fopen("student_records.txt","w");
+    student->rollnumber=rollnumber;
+    strcpy(student->first_name,first_name);
+    strcpy(student->last_name,last_name);
+    strcpy(student->branch,branch);
+    student->cgpa=cgpa;
+    student->next = NULL;
+    if(head==NULL)
     {
-        new_student -> next = head;
-        head = new_student;
+        /* if head is NULL, set student as the new head */
+        head = student;
     }
-    else
-    {
-        Student *temp = head;
-        while(temp -> next != NULL || temp->next -> rollNumber < new_student -> rollNumber)
-        {
-            temp = temp->next;
-        }
-        new_student -> next = temp -> next;
-        temp->next = new_student;
+    else{
+        /* if list is not empty
+         insert student in beginning of head */
+        student->next = head;
+        head = student;
     }
-    fprintf(file, "%s %s %d %.2f %s\n", new_student->firstName, new_student->lastName, new_student->rollNumber, new_student->cgpa, new_student->branch);
+    fprintf(file, "%d  %s %s %s %.2f \n", student->rollnumber,student->first_name,student->last_name,student->branch,student->cgpa);
     fclose(file);
     printf("Student record added successfully.\n");
+    return head;  
 }
-void display()
+void search(struct Student *head, int rollnumber)
 {
-    // FILE *file;
-    // file = fopen("student_records.txt", "r");
-    // if(file==NULL)
-    // {
-    //     printf("No records found!\n");
-    //     return;
-    // }
-    // printf("Student Records:\n");
-    // Student *temp = head;
-    // while (temp != NULL) 
-    // {
-    //     printf("First Name: %s\nLast Name: %s\nRoll Number: %d\nCGPA: %.2f\nBranch: %s\n\n", temp -> firstName, temp -> lastName, temp -> rollNumber, temp -> cgpa, temp -> branch);
-    //     temp = temp -> next;
-    // }
-    
-    
-
-    // fclose(file);
+    struct Student * temp = head;
+    while(temp!=NULL)
+    {
+        if(temp->rollnumber==rollnumber)
+        {
+            printf("Roll Number: %d\n", temp->rollnumber);
+            printf(" first Name: %s\n", temp->first_name);
+            printf("last Name: %s\n", temp->last_name);
+            printf("branch: %s\n", temp->branch);
+            printf("CGPA: %f\n", temp->cgpa);
+            return;
+        }
+        temp = temp->next;
+    }
+    printf("Student with roll number %d is not found !!!\n", rollnumber);
+}
+void update(struct Student *head ,int rollnumber)
+{
+    struct Student * temp = head;
+    while(temp!=NULL)
+    {
+    if(temp->rollnumber==rollnumber)
+        {
+            printf("Record with roll number %d Found !!!\n", rollnumber);
+            printf("Enter new  first name: ");
+            scanf("%s", temp->first_name);
+            printf("Enter new  Last name: ");
+            scanf("%s", temp->last_name);
+            printf("Enter new branch name: ");
+            scanf("%s", temp->branch);
+            printf("Enter new CGPA: ");
+            scanf("%f",&temp->cgpa);
+            printf("Updation Successful!!!\n");
+            return;
+        }
+        temp = temp->next;
+    }
+    printf("Student with roll number %d is not found !!!\n", rollnumber);     
 }
 
 int main()
 {
+     struct Student *head = NULL;
+     char first_name[100];
+     char last_name[100];
+     char branch[100];
+     int rollnumber;
+     float cgpa;
      int choice;
-     while (1)
+     int flag=1;
+     printf("Student Information Management System\n");
+     while (flag)
       {
-        printf("Student Information Management System\n");
-        printf("1. Add Student\n2. Display Students\n3. Search Student\n4. Exit\n");
+        printf("1. Add Student information\n2. Search Student\n3. Update information of student\n4. Display Students\n5. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
-
         switch (choice) 
         {
             case 1:
-                addStudent();
+                printf("Enter roll number: ");
+                scanf("%d", &rollnumber);
+                printf("Enter  first name of student: ");
+                scanf("%s",first_name);
+                printf("Enter  last name of student: ");
+                scanf("%s",last_name);
+                printf("Enter branch name: ");
+                scanf("%s", branch);
+                printf("Enter cgpa: ");
+                scanf("%f",&cgpa);
+                head = insert(head,rollnumber,first_name,last_name,branch,cgpa);
                 break;
             case 2:
-                display();
+                printf("Enter roll number to search: ");
+                scanf("%d", &rollnumber);
+                search(head,rollnumber);
+                break;
+            case 3:
+                printf("enter roll number to update a information of student: ");
+                scanf("%d", &rollnumber);
+                update(head,rollnumber);
                 break;
             case 4:
-                printf("Exit\n");
-                return 0;
+                display(head);
+                break;
+            case 5:
+                printf("Exit");
+                flag=0;
         }
-      }
-      return 0;
-
+     }
 }
